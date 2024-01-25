@@ -1,12 +1,33 @@
-// TODO: generateStaticParams from db data
+import clientPromise from "../../lib/mongodb.js";
 
-export default function Problem({ params }) {
+export default async function Problem({ params }) {
+  const problem = await getProblem(params.id)
     return (
-      <main className="flex flex-col flex-grow items-center justify-between p-24">
+      <main className="flex flex-col flex-grow items-center p-24">
         <div className="text-5xl font-bold text-center my-4 text-csmGreen">
-          Problem ID: {params.id}
+          {problem.problemId}: {problem.name}
         </div>
+
+        <div className="text-3xl font-bold text-center my-4 text-csmGreen">
+          Difficulty: {problem.difficulty}
+        </div>
+
       </main>
     )
     
   }
+
+export async function getProblem(id) {
+  try {
+      const client = await clientPromise;
+      const db = client.db("problembank");
+
+      const problem = await db
+          .collection("problems")
+          .findOne({problemId: parseInt(id)});
+
+      return problem;
+  } catch (e) {
+      console.error(e);
+  }
+}
