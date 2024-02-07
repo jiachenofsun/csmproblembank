@@ -5,7 +5,7 @@ export async function POST(Request) {
         const client = await clientPromise
         const db = client.db("problembank")
         const reader = Request.body.getReader()
-        let chunks = '';
+        let chunks = ''
 
         while (true) {
             const { done, value } = await reader.read()
