@@ -1,7 +1,10 @@
 "use client"
 import React, { useState, useRef } from 'react'
+import "@/app/ui/globals.css"
 
 export default function AddProblem() {
+    const [isLoading, setIsLoading] = useState(false)
+
     const [selectedTopics, setSelectedTopics] = useState([])
     const problemIdRef = useRef()
     const nameRef = useRef()
@@ -36,13 +39,16 @@ export default function AddProblem() {
     const handleSubmit = async (event) => {
         event.preventDefault()
         setErrIsOpen(false)
+        setSuccessIsOpen(false)
+        setIsLoading(true)
+
         if (!problemIdRef.current.value || !nameRef.current.value) {
-            console.error('Problem ID and Name are required.')
             setErrIsOpen(true)
+            setErrText('Problem ID and Name are required.')
             return
           }
         const formData = {
-            problemId: problemIdRef.current.value,
+            problemId: parseInt(problemIdRef.current.value),
             name: nameRef.current.value,
             difficulty: difficultyRef.current.value,
             selectedTopics,
@@ -59,18 +65,52 @@ export default function AddProblem() {
             },
             body: JSON.stringify(formData),
         })
+        setIsLoading(false)
 
-        if (!response.ok) console.error('Network response was not OK')
+        if (!response.ok) {
+            setErrIsOpen(true)
+            setErrText(`${response.statusText} (HTTP status code ${response.status})`)
+        } else {
+            setSuccessIsOpen(true)
+            setSuccessText(`${response.statusText}`)
+            clearFormData()
+        }
     }
 
     const [errIsOpen, setErrIsOpen] = useState(false)
+    const [errText, setErrText] = useState("")
 
+    const [successIsOpen, setSuccessIsOpen] = useState(false)
+    const [successText, setSuccessText] = useState("")
+
+    function clearFormData() {
+        problemIdRef.current.value = ""
+        nameRef.current.value = ""
+        difficultyRef.current.value = "Easy"
+        setSelectedTopics([])
+        metaRef.current.value = ""
+        slidesRef.current.value = ""
+        videoRef.current.value = ""
+    }
     return (
     <form id="addProblemForm" className="mx-auto my-8 p-6 rounded lg:min-w-[40%]">
+        {isLoading && (
+            <div className="loading-spinner-container px-4 py-3 mb-4 relative">
+                <div className="loading-spinner"></div>
+            </div>
+        )}
+
         {errIsOpen && (
             <div className="flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-4 rounded relative" role="alert">
-                <span className=""><b>Error</b>: Problem ID and Name are required. </span>
+                <span className=""><b>Error</b>: {errText} </span>
                 <span className="cursor-pointer" onClick={() => setErrIsOpen(false)}>x</span>
+            </div>
+        )}
+
+        {successIsOpen && (
+            <div className="flex justify-between bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-4 rounded relative" role="alert">
+                <span className=""><b>Success!</b> {successText} </span>
+                <span className="cursor-pointer" onClick={() => setSuccessIsOpen(false)}>x</span>
             </div>
         )}
 
@@ -143,3 +183,4 @@ export default function AddProblem() {
     </form>
     )
 }
+

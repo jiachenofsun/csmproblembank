@@ -13,13 +13,19 @@ export async function POST(Request) {
             chunks += new TextDecoder("utf-8").decode(value)
         }
 
-        console.log(JSON.parse(chunks)) 
+        const formData = JSON.parse(chunks)
+        console.log("Parsed JSON formData: \n", formData)
 
-        // const result = await db.collection("problems").insertOne(Request.body)
+        // Check for duplicate problemId
+        const existingEntry = await db.collection("problems").findOne({problemId: formData.problemId})
+        if (existingEntry) {
+            return new Response(`Unable to insert problem ${formData.problemId} as entry already exists`,
+            { status: 422, statusText: `Problem ID ${formData.problemId} already exists` })
+        }
 
-        return new Response(`Success`)
-
-        return new Response(`Document inserted with _id: ${result.insertedId}`)
+        const result = await db.collection("problems").insertOne(formData)
+        return new Response(`Document inserted with _id: ${result.insertedId}`,
+        { status: 200, statusText: `Problem ID ${formData.problemId} inserted into database` })
     } catch (e) {
         console.error(e)
     }
