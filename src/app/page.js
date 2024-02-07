@@ -1,4 +1,4 @@
-import clientPromise from "./lib/mongodb.js";
+import clientPromise from "./lib/mongodb.js"
 import TableItem from "./ui/TableItem.js"
 
 export default async function Home() {
@@ -34,10 +34,10 @@ export async function getProblems() {
           .find({})
           .sort({ problemId: 1 })
           .limit(20)
-          .toArray();
+          .toArray()
 
-      return problems;
+      return problems
   } catch (e) {
-      console.error(e);
+      console.error(e)
   }
 }

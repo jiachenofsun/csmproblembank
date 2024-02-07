@@ -1,5 +1,5 @@
-import clientPromise from "../../lib/mongodb.js";
-import { getDifficultyStyles } from "@/app/ui/utils.js";
+import clientPromise from "../../lib/mongodb.js"
+import { getDifficultyStyles } from "@/app/ui/utils.js"
 
 export default async function Problem({ params }) {
   const problem = await getProblem(params.id)
@@ -20,15 +20,15 @@ export default async function Problem({ params }) {
 
 export async function getProblem(id) {
   try {
-      const client = await clientPromise;
-      const db = client.db("problembank");
+      const client = await clientPromise
+      const db = client.db("problembank")
 
       const problem = await db
           .collection("problems")
-          .findOne({problemId: parseInt(id)});
+          .findOne({problemId: parseInt(id)})
 
-      return problem;
+      return problem
   } catch (e) {
-      console.error(e);
+      console.error(e)
   }
 }

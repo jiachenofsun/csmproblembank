@@ -1,6 +1,5 @@
 "use client"
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react'
 
 export default function AddProblem() {
     const [selectedTopics, setSelectedTopics] = useState([])
@@ -34,7 +33,7 @@ export default function AddProblem() {
     })
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         setErrIsOpen(false)
         if (!problemIdRef.current.value || !nameRef.current.value) {
@@ -53,7 +52,15 @@ export default function AddProblem() {
                 video: videoRef.current.value
             }
         }
-        console.log('Form Data:', JSON.stringify(formData, null, 2));
+        const response = await fetch('/api/addProblem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+
+        if (!response.ok) console.error('Network response was not OK')
     }
 
     const [errIsOpen, setErrIsOpen] = useState(false)
