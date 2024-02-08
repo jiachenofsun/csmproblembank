@@ -51,7 +51,7 @@ export default function AddProblem() {
             problemId: parseInt(problemIdRef.current.value),
             name: nameRef.current.value,
             difficulty: difficultyRef.current.value,
-            selectedTopics,
+            topics: selectedTopics,
             resourceLinks: {
                 meta: metaRef.current.value,
                 slides: slidesRef.current.value,
