@@ -14,39 +14,32 @@ export default function Table({ problems }) {
     const columns = [
       columnHelper.accessor('problemId', {
         header: () => 'ID',
-        width: 'w-1/10',
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('name', {
         header: () => 'Name',
-        width: 'w-2/10',
         cell: info => <p className="text-center sm:text-left w-full">{info.getValue()}</p>,
       }),
       columnHelper.accessor('difficulty', {
         header: () => 'Difficulty',
-        width: 'w-1/10',
         cell: info => <span className={`inline-block ${getDifficultyStyles(info.getValue())}`}>{info.getValue()}</span>,
       }),
       columnHelper.accessor('topics', {
         header: () => 'Topics',
-        width: 'w-2/10',
         cell: info => info.getValue().map((topic) => (
           <span className='bg-blue-200 rounded px-2 py-1 mr-2' key={topic}>{topic}</span>
         )),
       }),
       columnHelper.accessor('resourceLinks.meta', {
         header: () => 'M',
-        width: 'w-1/10',
         cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor('resourceLinks.slides', {
         header: () => 'S',
-        width: 'w-1/10',
         cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor('resourceLinks.video', {
         header: () => 'V',
-        width: 'w-1/10',
         cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
     ]
