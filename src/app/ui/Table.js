@@ -1,5 +1,5 @@
 import "@/app/ui/globals.css"
-import { getDifficultyStyles } from "@/app/ui/utils.js"
+import { getDifficultyStyles, getResourceLinkStyles, getColumnWidth } from "@/app/ui/utils.js"
 import {
   createColumnHelper,
   flexRender,
@@ -13,26 +13,42 @@ export default function Table({ problems }) {
 
     const columns = [
       columnHelper.accessor('problemId', {
-        header: () => <span>ID</span>,
+        header: () => 'ID',
+        width: 'w-1/10',
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('name', {
         header: () => 'Name',
-        cell: info => <p className="text-left">{info.getValue()}</p>,
+        width: 'w-2/10',
+        cell: info => <p className="text-center sm:text-left w-full">{info.getValue()}</p>,
       }),
       columnHelper.accessor('difficulty', {
         header: () => 'Difficulty',
+        width: 'w-1/10',
         cell: info => <span className={`inline-block ${getDifficultyStyles(info.getValue())}`}>{info.getValue()}</span>,
       }),
       columnHelper.accessor('topics', {
         header: () => 'Topics',
+        width: 'w-2/10',
         cell: info => info.getValue().map((topic) => (
           <span className='bg-blue-200 rounded px-2 py-1 mr-2' key={topic}>{topic}</span>
         )),
       }),
-      // TODO: add resourceLinks grouping. WE ONLY CARE WHETHER EACH LINK EXISTS OR NOT
-      // Resources
-      // M | S | V
+      columnHelper.accessor('resourceLinks.meta', {
+        header: () => 'M',
+        width: 'w-1/10',
+        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+      }),
+      columnHelper.accessor('resourceLinks.slides', {
+        header: () => 'S',
+        width: 'w-1/10',
+        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+      }),
+      columnHelper.accessor('resourceLinks.video', {
+        header: () => 'V',
+        width: 'w-1/10',
+        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+      }),
     ]
 
     const table = useReactTable({
@@ -43,16 +59,15 @@ export default function Table({ problems }) {
         getPaginationRowModel: getPaginationRowModel(),
 
       })
-    // table.setPageSize(5)
 
     return (
         <>
-            <table>
+            <table className="w-4/5">
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>
                         {headerGroup.headers.map(header => (
-                        <th key={header.id}>
+                        <th key={header.id} className={`bg-csmGreenDesat border border-gray-400 px-4 py-2 ${getColumnWidth(header.column.columnDef.header)}`}>
                             {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -66,17 +81,19 @@ export default function Table({ problems }) {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map(row => (
-                    <tr key={row.id}>
+                    <tr key={row.id} className=" py-2">
                         {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className="text-center">
+                        <td key={cell.id} className={`border border-gray-400 px-4 py-2 ${getColumnWidth(cell.column.columnDef.header)}`}>
+                          <div className="flex text-center justify-center items-center">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </div>
                         </td>
                         ))}
                     </tr>
                     ))}
                 </tbody>
             </table>
-            <div className="flex items-center gap-2">
+            <div className="mt-4 flex items-center gap-2">
                 <button
                 className="border rounded p-1"
                 onClick={() => table.setPageIndex(0)}

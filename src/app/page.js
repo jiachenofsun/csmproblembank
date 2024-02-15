@@ -40,16 +40,6 @@ export default function Home() {
           <div className="text-5xl font-bold text-center mb-12 text-csmGreen">
             CSM Problem Bank
           </div>
-          {/* <ul className="divide-y divide-gray-200 shadow">
-            <li className="grid grid-cols-[auto_minmax(0,2fr)_auto] gap-8 p-4 font-bold bg-gray-100">
-              <div className="text-left">ID</div>
-              <div className="text-center">Name</div>
-              <div className="text-right">Difficulty</div>
-            </li>
-            {problems.map(({ _id, ...problem }) => (
-              <TableItem key={problem.problemId} problem={problem} />
-            ))}
-          </ul> */}
           <Table problems={problems} />
         </>
       )}
