@@ -7,13 +7,24 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
+
+
+
 
 export default function Table({ problems }) {
+    const router = useRouter()
+
+    const handleRowClick = (problemId) => {
+      router.push(`/id/${problemId}`)
+    }
+
     const columnHelper = createColumnHelper()
 
     const columns = [
       columnHelper.accessor('problemId', {
         header: () => 'ID',
+        id: 'problemId',
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('name', {
@@ -32,15 +43,15 @@ export default function Table({ problems }) {
       }),
       columnHelper.accessor('resourceLinks.meta', {
         header: () => 'M',
-        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+        cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor('resourceLinks.slides', {
         header: () => 'S',
-        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+        cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor('resourceLinks.video', {
         header: () => 'V',
-        cell: info => <div className={`w-5 h-5 rounded ${getResourceLinkStyles(info.getValue())}`}></div>,
+        cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
     ]
 
@@ -74,14 +85,16 @@ export default function Table({ problems }) {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map(row => (
-                    <tr key={row.id} className=" py-2">
+                    <tr key={row.id} onClick={() => handleRowClick(row.getValue('problemId'))} className="cursor-pointer py-2 hover:bg-gray-200">
+                      
                         {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className={`border border-gray-400 px-4 py-2 ${getColumnWidth(cell.column.columnDef.header)}`}>
+                          <td key={cell.id} className={`border border-gray-400 px-4 py-2 ${getColumnWidth(cell.column.columnDef.header)}`}>
                           <div className="flex text-center justify-center items-center">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </div>
                         </td>
                         ))}
+                      
                     </tr>
                     ))}
                 </tbody>

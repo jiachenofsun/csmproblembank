@@ -25,9 +25,9 @@ export function getColumnWidth(header) {
     case 'ID':
       return '';
     case 'Name':
-      return 'w-4/5 sm:w-1/3';
+      return 'w-1/3 sm:w-2/5';
     case 'Topics':
-      return 'w-1/2 hidden sm:table-cell';
+      return 'hidden sm:table-cell sm:w-1/2';
     default:
       return 'hidden sm:table-cell';
   }
