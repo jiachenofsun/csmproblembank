@@ -9,12 +9,9 @@ import {
   getFacetedUniqueValues,
   getPaginationRowModel,
   useReactTable,
-  sortingFns,
 } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useMemo } from "react"
-
-
+import { useEffect, useState, useMemo, useCallback } from "react"
 
 export default function Table({ problems }) {
     const router = useRouter()
@@ -25,6 +22,15 @@ export default function Table({ problems }) {
     const [columnFilters, setColumnFilters] = useState([])
 
     const columnHelper = createColumnHelper()
+    
+    function booleanFilter(row, columnId, filterValue) {
+      console.log('x')
+      if (filterValue === null) {
+        return true
+      } else {
+        return row.getValue(columnId) === filterValue
+      }
+    }
 
     const columns = [
       columnHelper.accessor('problemId', {
@@ -49,19 +55,22 @@ export default function Table({ problems }) {
           <span className='bg-blue-200 rounded px-2 py-1 mr-2' key={topic}>{topic}</span>
         )),
       }),
-      columnHelper.accessor('resourceLinks.meta', {
+      columnHelper.accessor(row => row.resourceLinks.meta.trim() !== '' ? true : false, {
         header: () => 'M',
         id: 'meta',
+        filterFn: booleanFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
-      columnHelper.accessor('resourceLinks.slides', {
+      columnHelper.accessor(row => row.resourceLinks.slides.trim() !== '' ? true : false, {
         header: () => 'S',
         id: 'slides',
+        filterFn: booleanFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
-      columnHelper.accessor('resourceLinks.video', {
+      columnHelper.accessor(row => row.resourceLinks.video.trim() !== '' ? true : false, {
         header: () => 'V',
         id: 'video',
+        filterFn: booleanFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
     ]
@@ -180,52 +189,74 @@ export default function Table({ problems }) {
     )
 }
 
-
 function Filter({ column, table }) {
   // const firstValue = table
   //   .getPreFilteredRowModel()
   //   .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
+  const onChangeMemoized = useCallback(
+    value => {
+      column.setFilterValue(value);
+    },
+    [column]
+  );
 
-  switch(column.id) {
-    case 'meta':
-    case 'video':
-    case 'slides':
-      
-  }
   const sortedUniqueValues = useMemo(() => {
     switch(column.id) {
       case 'meta':
       case 'video':
       case 'slides':
-        return [true, false]
       case 'problemId':
         return []
       default:
-        return Array.from(column.getFacetedUniqueValues().keys()).sort();
-
+        return Array.from(column.getFacetedUniqueValues().keys()).sort()
     }
   }, [column.getFacetedUniqueValues()])
 
-  return (
-    <>
-      <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map((value) => (
-          <option value={value} key={value} />
-        ))}
-      </datalist>
-      <DebouncedInput
-        type="text"
-        value={(columnFilterValue ?? '')}
-        onChange={value => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-2/3 min-w-16 border shadow rounded"
-        list={column.id + 'list'}
-      />
-      <div className="h-1" />
-    </>
-  )
+  switch (column.id) {
+    case 'meta':
+    case 'video':
+    case 'slides':
+
+      return (
+          <select onChange={(event) => column.setFilterValue(JSON.parse(event.target.value))}>
+            <option value="null">All</option>
+            <option value="true">Done</option>
+            <option value="false">Empty</option>
+          </select>
+      )
+
+    // case 'problemId':
+    //   return (
+
+    //   )
+
+    // case 'topics':
+    //   return (
+
+    //   )
+
+    default:
+      return (
+        <>
+          <datalist id={column.id + 'list'}>
+            {sortedUniqueValues.slice(0, 50).map((value) => (
+              <option value={value} key={value} />
+            ))}
+          </datalist>
+          <DebouncedInput
+            type="text"
+            value={(columnFilterValue ?? '')}
+            onChange={onChangeMemoized}
+            placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+            className="w-2/3 min-w-16 border shadow rounded"
+            list={column.id + 'list'}
+          />
+          <div className="h-1" />
+        </>
+      )
+  }
 }
 
 // A debounced input react component
@@ -242,7 +273,7 @@ function DebouncedInput({ value: initialValue, onChange, debounce = 500, ...prop
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value, debounce, onChange]);
+  }, [value, debounce]);
 
   return (
     <input {...props} value={value} onChange={e => setValue(e.target.value)} />
