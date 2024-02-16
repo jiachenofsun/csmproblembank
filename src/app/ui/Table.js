@@ -200,7 +200,7 @@ function Filter({ column }) {
 
   const onChangeIntMemoized = useCallback(
     value => {
-      column.setFilterValue(isNaN(value) ? value : parseInt(value))
+      column.setFilterValue(isNaN(value) ? String(value) : parseInt(value))
     },
     [column]
   )
@@ -234,7 +234,7 @@ function Filter({ column }) {
       return (
         <DebouncedInput
           type="number"
-          value={columnFilterValue}
+          value={isNaN(columnFilterValue) ? '' : columnFilterValue}
           onChange={onChangeIntMemoized}
           className="w-24 border shadow rounded"
         />
@@ -255,7 +255,7 @@ function Filter({ column }) {
           </datalist>
           <DebouncedInput
             type="text"
-            value={(columnFilterValue)}
+            value={(columnFilterValue ?? '')}
             onChange={onChangeMemoized}
             placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
             className="w-2/3 min-w-16 border shadow rounded"
@@ -269,21 +269,21 @@ function Filter({ column }) {
 
 // A debounced input react component
 function DebouncedInput({ value: initialValue, onChange, debounce = 500, ...props }) {
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+    setValue(initialValue)
+  }, [initialValue])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
+      onChange(value)
+    }, debounce)
 
-    return () => clearTimeout(timeout);
-  }, [value, debounce]);
+    return () => clearTimeout(timeout)
+  }, [value, debounce])
 
   return (
     <input {...props} value={value} onChange={e => setValue(e.target.value)} />
-  );
+  )
 }
