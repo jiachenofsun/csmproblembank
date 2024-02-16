@@ -24,8 +24,7 @@ export default function Table({ problems }) {
     const columnHelper = createColumnHelper()
     
     function booleanFilter(row, columnId, filterValue) {
-      console.log('x')
-      if (filterValue === null) {
+      if (filterValue === null || isNaN(filterValue)) {
         return true
       } else {
         return row.getValue(columnId) === filterValue
@@ -36,6 +35,7 @@ export default function Table({ problems }) {
       columnHelper.accessor('problemId', {
         header: () => 'ID',
         id: 'problemId',
+        filterFn: booleanFilter,
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('name', {
@@ -189,18 +189,21 @@ export default function Table({ problems }) {
     )
 }
 
-function Filter({ column, table }) {
-  // const firstValue = table
-  //   .getPreFilteredRowModel()
-  //   .flatRows[0]?.getValue(column.id)
-
+function Filter({ column }) {
   const columnFilterValue = column.getFilterValue()
   const onChangeMemoized = useCallback(
     value => {
-      column.setFilterValue(value);
+      column.setFilterValue(value)
     },
     [column]
-  );
+  )
+
+  const onChangeIntMemoized = useCallback(
+    value => {
+      column.setFilterValue(isNaN(value) ? value : parseInt(value))
+    },
+    [column]
+  )
 
   const sortedUniqueValues = useMemo(() => {
     switch(column.id) {
@@ -227,10 +230,15 @@ function Filter({ column, table }) {
           </select>
       )
 
-    // case 'problemId':
-    //   return (
-
-    //   )
+    case 'problemId':
+      return (
+        <DebouncedInput
+          type="number"
+          value={columnFilterValue}
+          onChange={onChangeIntMemoized}
+          className="w-24 border shadow rounded"
+        />
+      )
 
     // case 'topics':
     //   return (
@@ -247,7 +255,7 @@ function Filter({ column, table }) {
           </datalist>
           <DebouncedInput
             type="text"
-            value={(columnFilterValue ?? '')}
+            value={(columnFilterValue)}
             onChange={onChangeMemoized}
             placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
             className="w-2/3 min-w-16 border shadow rounded"
