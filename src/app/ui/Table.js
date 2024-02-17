@@ -29,6 +29,19 @@ export default function Table({ problems }) {
       }
     }
 
+    function arrayOneOrMoreFilter(row, columnId, filterValue) {
+      const rowTopics = row.getValue(columnId)
+      if (filterValue.length === 0) {
+        return true
+      }
+      for (let i = 0; i < filterValue.length; i++) {
+        if (rowTopics.includes(filterValue[i])) {
+          return true
+        }
+      }
+      return false
+    }
+
     const [columnFilters, setColumnFilters] = useState([])
 
     const columnHelper = createColumnHelper()
@@ -53,6 +66,7 @@ export default function Table({ problems }) {
       columnHelper.accessor('topics', {
         header: () => 'Topics',
         id: 'topics',
+        filterFn: arrayOneOrMoreFilter,
         cell: info => info.getValue().map((topic) => (
           <span className='bg-blue-200 rounded px-2 py-1 mr-2' key={topic}>{topic}</span>
         )),
@@ -208,18 +222,19 @@ function Filter({ column }) {
     [column]
   )
   const onClickArrayMemoized = useCallback(
-    value => {
+    (value, toggleFunc = null) => {
       const curr = column.getFilterValue() || []
-      console.log(curr)
       if (!curr.includes(value)) {
         column.setFilterValue([...curr, value])
       } else {
         column.setFilterValue(curr.filter(item => item !== value))
       }
+      if (toggleFunc !== null) {
+        toggleFunc()
+      }
     },
     [column]
   )
-
 
   const sortedUniqueValues = useMemo(() => {
     switch(column.id) {
@@ -229,7 +244,7 @@ function Filter({ column }) {
       case 'problemId':
         return []
       case 'topics':
-        return Array.from(column.getFacetedUniqueValues().keys()).sort().filter(arr => arr.length === 1)
+        return Array.from(column.getFacetedUniqueValues().keys()).sort().filter(arr => arr.length === 1).flat()
       default:
         return Array.from(column.getFacetedUniqueValues().keys()).sort()
     }
