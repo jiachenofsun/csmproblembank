@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useRef } from 'react'
 import "@/app/ui/globals.css"
+import { topics } from "@/app/ui/utils.js"
 
 export default function AddProblem() {
     const [isLoading, setIsLoading] = useState(false)
@@ -13,12 +14,12 @@ export default function AddProblem() {
     const slidesRef = useRef()
     const videoRef = useRef()
 
-    const topics = [
-        "Inheritance and DMS",
-        "Polymorphism and Interfaces",
-        "Comparators", 
-        // ... add the rest of your topics
-        ]
+    // const topics = [
+    //     "Inheritance and DMS",
+    //     "Polymorphism and Interfaces",
+    //     "Comparators", 
+    //     // ... add the rest of your topics
+    //     ]
     
     const deleteFromSelectedTopics = (topic) => {
         setSelectedTopics(prev => {

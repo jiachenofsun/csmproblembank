@@ -32,3 +32,10 @@ export function getColumnWidth(header) {
       return 'hidden sm:table-cell'
   }
 }
+
+export const topics = [
+  "Inheritance and DMS",
+  "Polymorphism and Interfaces",
+  "Comparators", 
+  // ... add the rest of topics
+  ]

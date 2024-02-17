@@ -1,5 +1,6 @@
 import "@/app/ui/globals.css"
-import { getDifficultyStyles, getResourceLinkStyles, getColumnWidth } from "@/app/ui/utils.js"
+import { getDifficultyStyles, getResourceLinkStyles, getColumnWidth, topics as allTopics } from "@/app/ui/utils.js"
+import Accordion from "./Accordion"
 import {
   createColumnHelper,
   flexRender,
@@ -19,11 +20,8 @@ export default function Table({ problems }) {
       router.push(`/id/${problemId}`)
     }
 
-    const [columnFilters, setColumnFilters] = useState([])
-
-    const columnHelper = createColumnHelper()
-    
-    function booleanFilter(row, columnId, filterValue) {
+    // Custom filter definitions
+    function booleanIntFilter(row, columnId, filterValue) {
       if (filterValue === null || isNaN(filterValue)) {
         return true
       } else {
@@ -31,11 +29,15 @@ export default function Table({ problems }) {
       }
     }
 
+    const [columnFilters, setColumnFilters] = useState([])
+
+    const columnHelper = createColumnHelper()
+    
     const columns = [
       columnHelper.accessor('problemId', {
         header: () => 'ID',
         id: 'problemId',
-        filterFn: booleanFilter,
+        filterFn: booleanIntFilter,
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('name', {
@@ -58,19 +60,19 @@ export default function Table({ problems }) {
       columnHelper.accessor(row => row.resourceLinks.meta.trim() !== '' ? true : false, {
         header: () => 'M',
         id: 'meta',
-        filterFn: booleanFilter,
+        filterFn: booleanIntFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor(row => row.resourceLinks.slides.trim() !== '' ? true : false, {
         header: () => 'S',
         id: 'slides',
-        filterFn: booleanFilter,
+        filterFn: booleanIntFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
       columnHelper.accessor(row => row.resourceLinks.video.trim() !== '' ? true : false, {
         header: () => 'V',
         id: 'video',
-        filterFn: booleanFilter,
+        filterFn: booleanIntFilter,
         cell: info => <div className={`w-5 h-5 rounded-full ${getResourceLinkStyles(info.getValue())}`}></div>,
       }),
     ]
@@ -191,19 +193,33 @@ export default function Table({ problems }) {
 
 function Filter({ column }) {
   const columnFilterValue = column.getFilterValue()
-  const onChangeMemoized = useCallback(
+
+  // On change functions
+  const onChangeTextMemoized = useCallback(
     value => {
       column.setFilterValue(value)
     },
     [column]
   )
-
   const onChangeIntMemoized = useCallback(
     value => {
       column.setFilterValue(isNaN(value) ? String(value) : parseInt(value))
     },
     [column]
   )
+  const onClickArrayMemoized = useCallback(
+    value => {
+      const curr = column.getFilterValue() || []
+      console.log(curr)
+      if (!curr.includes(value)) {
+        column.setFilterValue([...curr, value])
+      } else {
+        column.setFilterValue(curr.filter(item => item !== value))
+      }
+    },
+    [column]
+  )
+
 
   const sortedUniqueValues = useMemo(() => {
     switch(column.id) {
@@ -212,6 +228,8 @@ function Filter({ column }) {
       case 'slides':
       case 'problemId':
         return []
+      case 'topics':
+        return Array.from(column.getFacetedUniqueValues().keys()).sort().filter(arr => arr.length === 1)
       default:
         return Array.from(column.getFacetedUniqueValues().keys()).sort()
     }
@@ -221,7 +239,6 @@ function Filter({ column }) {
     case 'meta':
     case 'video':
     case 'slides':
-
       return (
           <select onChange={(event) => column.setFilterValue(JSON.parse(event.target.value))}>
             <option value="null">All</option>
@@ -240,10 +257,10 @@ function Filter({ column }) {
         />
       )
 
-    // case 'topics':
-    //   return (
-
-    //   )
+    case 'topics':
+      return (
+          <Accordion values={sortedUniqueValues} onClickFn={onClickArrayMemoized} />
+      )
 
     default:
       return (
@@ -256,7 +273,7 @@ function Filter({ column }) {
           <DebouncedInput
             type="text"
             value={(columnFilterValue ?? '')}
-            onChange={onChangeMemoized}
+            onChange={onChangeTextMemoized}
             placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
             className="w-2/3 min-w-16 border shadow rounded"
             list={column.id + 'list'}
