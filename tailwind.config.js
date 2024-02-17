@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         csmGreen: '#9ae0b2',
         csmGreenDesat: '#d8f0e0',
+        csmGreenDark: '#94d1a9',
       },
     },
   },

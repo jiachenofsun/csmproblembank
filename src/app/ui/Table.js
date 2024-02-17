@@ -222,15 +222,12 @@ function Filter({ column }) {
     [column]
   )
   const onClickArrayMemoized = useCallback(
-    (value, toggleFunc = null) => {
+    (value) => {
       const curr = column.getFilterValue() || []
       if (!curr.includes(value)) {
         column.setFilterValue([...curr, value])
       } else {
         column.setFilterValue(curr.filter(item => item !== value))
-      }
-      if (toggleFunc !== null) {
-        toggleFunc()
       }
     },
     [column]
@@ -274,7 +271,7 @@ function Filter({ column }) {
 
     case 'topics':
       return (
-          <Accordion values={sortedUniqueValues} onClickFn={onClickArrayMemoized} />
+          <Accordion values={sortedUniqueValues} onClickFn={onClickArrayMemoized} column={column} />
       )
 
     default:

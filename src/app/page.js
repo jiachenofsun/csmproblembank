@@ -19,8 +19,10 @@ export default function Home() {
       throw new Error("Failed to get problems from database", response.statusText)
     } 
     else {
+      console.log('getting problems...')
       const problems = await response.json()
       setProblems(problems)
+      console.log('loading done')
       setIsLoading(false)
     }
   }
