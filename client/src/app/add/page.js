@@ -5,14 +5,15 @@ import { topics } from "@/app/ui/utils.js"
 
 export default function AddProblem() {
     const [isLoading, setIsLoading] = useState(false)
-
     const [selectedTopics, setSelectedTopics] = useState([])
+
     const problemIdRef = useRef()
     const nameRef = useRef()
     const difficultyRef = useRef()
     const metaRef = useRef()
     const slidesRef = useRef()
     const videoRef = useRef()
+    const latexRef = useRef()
 
     // const topics = [
     //     "Inheritance and DMS",
@@ -88,6 +89,7 @@ export default function AddProblem() {
         problemIdRef.current.value = ""
         nameRef.current.value = ""
         difficultyRef.current.value = "Easy"
+        latexRef.current.value = null;
         setSelectedTopics([])
         metaRef.current.value = ""
         slidesRef.current.value = ""
@@ -132,6 +134,11 @@ export default function AddProblem() {
                 <option value="Medium">Medium</option>
                 <option value="Hard">Hard</option>
             </select>
+        </div>
+
+        <div className="mb-4">
+            <label htmlFor="latexFile" className="block text-sm font-medium text-gray-700">LaTeX File:</label>
+            <input type="file" id="latexFile" name="latexFile" ref={latexRef} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" accept=".tex" />
         </div>
 
         <div className="mb-4">
