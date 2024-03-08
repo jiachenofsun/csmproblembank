@@ -14,13 +14,6 @@ export default function AddProblem() {
     const slidesRef = useRef()
     const videoRef = useRef()
     const latexRef = useRef()
-
-    // const topics = [
-    //     "Inheritance and DMS",
-    //     "Polymorphism and Interfaces",
-    //     "Comparators", 
-    //     // ... add the rest of your topics
-    //     ]
     
     const deleteFromSelectedTopics = (topic) => {
         setSelectedTopics(prev => {
@@ -50,8 +43,7 @@ export default function AddProblem() {
             return
           }
         const formData = new FormData();
-
-        formData.append('problemId', parseInt(problemIdRef.current.value));
+        formData.append('problemId', problemIdRef.current.value);
         formData.append('name', nameRef.current.value);
         formData.append('difficulty', difficultyRef.current.value);
         formData.append('topics', JSON.stringify(selectedTopics));
@@ -66,9 +58,6 @@ export default function AddProblem() {
 
         const response = await fetch('/api/addProblem', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
             body: formData,
         })
         setIsLoading(false)
