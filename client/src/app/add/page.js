@@ -49,23 +49,27 @@ export default function AddProblem() {
             setErrText('Problem ID and Name are required.')
             return
           }
-        const formData = {
-            problemId: parseInt(problemIdRef.current.value),
-            name: nameRef.current.value,
-            difficulty: difficultyRef.current.value,
-            topics: selectedTopics,
-            resourceLinks: {
-                meta: metaRef.current.value,
-                slides: slidesRef.current.value,
-                video: videoRef.current.value
-            }
+        const formData = new FormData();
+
+        formData.append('problemId', parseInt(problemIdRef.current.value));
+        formData.append('name', nameRef.current.value);
+        formData.append('difficulty', difficultyRef.current.value);
+        formData.append('topics', JSON.stringify(selectedTopics));
+        if (latexRef.current.files[0]) {
+        formData.append('texFile', latexRef.current.files[0]);
+        } else {
+        formData.append('texFile', null);
         }
+        formData.append('resourceLinks[meta]', metaRef.current.value);
+        formData.append('resourceLinks[slides]', slidesRef.current.value);
+        formData.append('resourceLinks[video]', videoRef.current.value);
+
         const response = await fetch('/api/addProblem', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
             },
-            body: JSON.stringify(formData),
+            body: formData,
         })
         setIsLoading(false)
 
