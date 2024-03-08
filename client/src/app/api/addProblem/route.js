@@ -1,5 +1,4 @@
 import clientPromise from "@/app/lib/mongodb.js"
-import { promises as fs } from 'fs'
 
 export async function POST(req) {
     try {
