@@ -1,20 +1,9 @@
 "use client"
-import React, { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react"
 import "@/app/ui/globals.css"
 import { topics } from "@/app/ui/utils.js"
 
 export default function ProblemForm({ initialState }) {
-  useEffect(() => {
-    problemIdRef.current.value = initialState.problemId
-    nameRef.current.value = initialState.name
-    difficultyRef.current.value = initialState.difficulty
-    latexRef.current.value = null
-    setSelectedTopics([...initialState.topics])
-    metaRef.current.value = initialState.resourceLinks.meta
-    slidesRef.current.value = initialState.resourceLinks.slides
-    videoRef.current.value = initialState.resourceLinks.video
-  }, [])
-
   const [isLoading, setIsLoading] = useState(false)
   const [selectedTopics, setSelectedTopics] = useState([])
 
@@ -26,11 +15,16 @@ export default function ProblemForm({ initialState }) {
   const videoRef = useRef()
   const latexRef = useRef()
 
-  const deleteFromSelectedTopics = (topic) => {
-    setSelectedTopics((prev) => {
-      return prev.filter((t) => t !== topic)
-    })
-  }
+  useEffect(() => {
+    problemIdRef.current.value = initialState.problemId
+    nameRef.current.value = initialState.name
+    difficultyRef.current.value = initialState.difficulty
+    latexRef.current.value = null
+    setSelectedTopics([...initialState.topics])
+    metaRef.current.value = initialState.resourceLinks.meta
+    slidesRef.current.value = initialState.resourceLinks.slides
+    videoRef.current.value = initialState.resourceLinks.video
+  }, [])
 
   const handleTopicClick = (topic) => {
     setSelectedTopics((prev) => {
@@ -39,6 +33,11 @@ export default function ProblemForm({ initialState }) {
       } else {
         return [...prev, topic]
       }
+    })
+  }
+  const deleteFromSelectedTopics = (topic) => {
+    setSelectedTopics((prev) => {
+      return prev.filter((t) => t !== topic)
     })
   }
 
