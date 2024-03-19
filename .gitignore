@@ -41,6 +41,9 @@
 /client/*.tsbuildinfo
 /client/next-env.d.ts
 
-#history
+# history
 /client/.history
 .history
+
+# misc
+.Ds_Store

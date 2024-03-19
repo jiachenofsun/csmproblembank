@@ -1,4 +1,3 @@
-"use client"
 import "@/app/ui/globals.css"
 import ProblemForm from "@/app/ProblemForm"
 

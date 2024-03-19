@@ -1,43 +1,13 @@
-"use client"
 import ProblemForm from "@/app/ProblemForm"
-import { useState, useEffect } from "react"
 import "@/app/ui/globals.css"
+import { GET as getProblem } from "@/app/api/getProblem/[id]/route"
 
-export default function EditProblem({ params }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [problem, setProblem] = useState()
-
-  async function getProblem() {
-    const response = await fetch(`/api/getProblem/${params.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      params: { id: params.id }
-    })
-    if (!response.ok) {
-      throw new Error(
-        "Failed to get problem from database",
-        response.statusText
-      )
-    } else {
-      setProblem(await response.json())
-      setIsLoading(false)
-    }
+export default async function EditProblem({ params }) {
+  const response = await getProblem({ params: { id: params.id } })
+  if (!response.ok) {
+    throw new Error("Failed to get problem from database", response.statusText)
   }
-  useEffect(() => {
-    getProblem()
-  }, [])
+  const problem = await response.json()
 
-  return (
-    <>
-      {isLoading ? (
-        <div className="loading-spinner-container px-4 py-3 mb-4 relative">
-          <div className="loading-spinner"></div>
-        </div>
-      ) : (
-        <ProblemForm initialState={problem} isEdit={true} />
-      )}
-    </>
-  )
+  return <ProblemForm initialState={problem} isEdit={true} />
 }
