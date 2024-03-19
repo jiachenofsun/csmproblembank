@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from "react"
 import "@/app/ui/globals.css"
 import { topics } from "@/app/ui/utils.js"
 
-export default function ProblemForm({ initialState }) {
+export default function ProblemForm({ initialState, isEdit }) {
+  console.log("INITIAL STATE", initialState)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedTopics, setSelectedTopics] = useState([])
 
@@ -147,14 +148,23 @@ export default function ProblemForm({ initialState }) {
         >
           Problem ID:
         </label>
-        <input
-          type="number"
-          id="problemId"
-          name="problemId"
-          ref={problemIdRef}
-          required
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-        />
+        {isEdit ? (
+          <p
+            ref={problemIdRef}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+          >
+            {problemIdRef.current && problemIdRef.current.value}
+          </p>
+        ) : (
+          <input
+            type="number"
+            id="problemId"
+            name="problemId"
+            ref={problemIdRef}
+            required
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm "
+          />
+        )}
       </div>
 
       <div className="mb-4">

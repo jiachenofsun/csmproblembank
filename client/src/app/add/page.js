@@ -16,5 +16,5 @@ export default function AddProblem() {
     }
   }
 
-  return <ProblemForm initialState={initialState} />
+  return <ProblemForm initialState={initialState} isEdit={false} />
 }
