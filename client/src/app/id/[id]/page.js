@@ -64,7 +64,7 @@ export default async function Problem({ params }) {
           className="mt-12 inline-flex items-center px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Edit Problem
-        </Link>{" "}
+        </Link>
       </div>
     </main>
   )

@@ -108,7 +108,7 @@ export default function ProblemForm({ initialState, isEdit }) {
   return (
     <form
       id="addProblemForm"
-      className="mx-auto my-8 p-6 rounded lg:min-w-[40%]"
+      className="mx-auto my-8 p-6 rounded flex-grow lg:min-w-[40%]"
     >
       {successIsOpen && isEdit && redirect(`/id/${problemIdRef.current.value}`)}
       {isLoading && (
@@ -251,7 +251,7 @@ export default function ProblemForm({ initialState, isEdit }) {
             </span>
           </span>
         ))}
-        <ul className="border border-gray-300 rounded-md mt-2">
+        <ul className="border border-gray-300 rounded-md h-screen max-h-40 overflow-auto mt-2 ">
           {topics.map((topic) => (
             <li
               key={topic}
