@@ -297,10 +297,9 @@ function Filter({ column }) {
       case "problemId":
         return []
       case "topics":
-        return Array.from(column.getFacetedUniqueValues().keys())
-          .sort()
-          .filter((arr) => arr.length === 1)
-          .flat()
+        return [
+          ...new Set(Array.from(column.getFacetedUniqueValues().keys()).flat())
+        ].sort()
       default:
         return Array.from(column.getFacetedUniqueValues().keys()).sort()
     }
