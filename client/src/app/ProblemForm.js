@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react"
 import "@/app/ui/globals.css"
 import { topics } from "@/app/ui/utils.js"
+import { redirect } from "next/navigation"
 
 export default function ProblemForm({ initialState, isEdit }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -66,19 +67,25 @@ export default function ProblemForm({ initialState, isEdit }) {
     formData.append("resourceLinks[slides]", slidesRef.current.value)
     formData.append("resourceLinks[video]", videoRef.current.value)
 
-    const response = await fetch("/api/addProblem", {
-      method: "POST",
-      body: formData
-    })
+    const response = await fetch(
+      `/api/${isEdit ? "editProblem" : "addProblem"}`,
+      {
+        method: "POST",
+        body: formData
+      }
+    )
     setIsLoading(false)
 
     if (!response.ok) {
       setErrIsOpen(true)
+
       setErrText(`${response.statusText} (HTTP status code ${response.status})`)
     } else {
       setSuccessIsOpen(true)
       setSuccessText(`${response.statusText}`)
-      clearFormData()
+      if (!isEdit) {
+        clearFormData()
+      }
     }
   }
 
@@ -103,6 +110,7 @@ export default function ProblemForm({ initialState, isEdit }) {
       id="addProblemForm"
       className="mx-auto my-8 p-6 rounded lg:min-w-[40%]"
     >
+      {successIsOpen && isEdit && redirect(`/id/${problemIdRef.current.value}`)}
       {isLoading && (
         <div className="loading-spinner-container px-4 py-3 mb-4 relative">
           <div className="loading-spinner"></div>

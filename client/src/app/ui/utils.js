@@ -15,7 +15,7 @@ export function getResourceLinkStyles(link) {
   if (link) {
     return "bg-green-500"
   } else {
-    return "bg-gray-500"
+    return "bg-gray-500 pointer-events-none"
   }
 }
 
