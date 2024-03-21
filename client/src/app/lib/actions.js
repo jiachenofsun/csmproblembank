@@ -7,7 +7,7 @@ export async function authenticate(_currentState, formData) {
     return "success"
   } catch (error) {
     if (error) {
-      return "Invalid Credentials"
+      return error.message
     }
   }
   throw error

@@ -6,7 +6,6 @@ import { redirect } from "next/navigation"
 
 export default function Page() {
   const [state, dispatch] = useFormState(authenticate, undefined)
-  console.log("STATE: ", state)
 
   return (
     <main className="flex flex-col flex-grow items-center justify-center p-12">
