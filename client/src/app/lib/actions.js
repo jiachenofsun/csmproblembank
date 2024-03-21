@@ -20,7 +20,7 @@ async function signIn(password) {
   cookies().set("session", "dummy value", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // One week
+    maxAge: 60 * 60 * 24 * 7, // Expires in 1 week
     path: "/"
   })
   return
