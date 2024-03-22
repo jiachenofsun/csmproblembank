@@ -6,7 +6,7 @@ import {
   getResourceLinkStyles,
   getColumnWidth
 } from "@/app/ui/utils.js"
-import Accordion from "./Accordion"
+import Accordion from "./ui/Accordion"
 import {
   createColumnHelper,
   flexRender,
@@ -21,8 +21,10 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState, useMemo, useCallback } from "react"
 
 export default function Table({ problems }) {
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const handleRowClick = (problemId) => {
+    setIsLoading(true)
     router.push(`/id/${problemId}`)
   }
 
@@ -152,6 +154,11 @@ export default function Table({ problems }) {
         </div>
       ) : (
         <>
+          {isLoading && (
+            <div className="loading-spinner-container px-4 py-3 mb-4 relative">
+              <div className="loading-spinner"></div>
+            </div>
+          )}
           <table className="w-4/5">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

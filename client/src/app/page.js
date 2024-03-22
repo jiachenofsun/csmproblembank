@@ -1,5 +1,5 @@
 import "@/app/ui/globals.css"
-import Table from "@/app/ui/Table"
+import Table from "@/app/Table"
 import { GET as getProblems } from "@/app/api/getProblems/route"
 import Link from "next/link"
 
