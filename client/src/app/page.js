@@ -3,6 +3,8 @@ import Table from "@/app/Table"
 import { GET as getProblems } from "@/app/api/getProblems/route"
 import Link from "next/link"
 
+export const revalidate = 30
+
 export default async function Home() {
   const response = await getProblems(null)
   if (!response.ok) {

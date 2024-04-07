@@ -4,6 +4,8 @@ import { GET as getProblem } from "@/app/api/getProblem/[id]/route"
 import { getResourceLinkStyles } from "@/app/ui/utils.js"
 import Link from "next/link"
 
+export const revalidate = 30
+
 export default async function Problem({ params }) {
   const response = await getProblem({ params: { id: params.id } })
   if (!response.ok) {
