@@ -1,4 +1,5 @@
 import clientPromise from "@/app/lib/mongodb.js"
+export const revalidate = 30
 
 export async function GET({ params }) {
   try {
