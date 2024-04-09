@@ -35,11 +35,12 @@ export default async function Problem({ params }) {
         <h2 className="text-3xl font-bold text-center my-6 text-black">
           Topics:
         </h2>
-        {problem.topics.map((topic) => (
-          <span className="bg-blue-200 rounded px-2 py-1 mr-2" key={topic}>
-            {topic}
-          </span>
-        ))}
+        {problem.topics &&
+          problem.topics.map((topic) => (
+            <span className="bg-blue-200 rounded px-2 py-1 mr-2" key={topic}>
+              {topic}
+            </span>
+          ))}
         <h2 className="text-3xl font-bold text-center my-6 text-black">
           Links:
         </h2>

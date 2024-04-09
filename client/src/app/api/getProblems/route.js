@@ -10,7 +10,6 @@ export async function GET(Request) {
       .collection("problems")
       .find({})
       .sort({ problemId: 1 })
-      .limit(20)
       .toArray()
 
     return new Response(JSON.stringify(result), {

@@ -83,6 +83,7 @@ export default function Table({ problems }) {
       id: "topics",
       filterFn: arrayOneOrMoreFilter,
       cell: (info) =>
+        info.getValue() !== "" &&
         info.getValue().map((topic) => (
           <span className="bg-blue-200 rounded px-2 py-1 mr-2" key={topic}>
             {topic}
@@ -92,7 +93,7 @@ export default function Table({ problems }) {
     columnHelper.accessor(
       (row) => (row.resourceLinks.meta.trim() !== "" ? true : false),
       {
-        header: () => "M",
+        header: () => "Meta",
         id: "meta",
         filterFn: booleanIntFilter,
         cell: (info) => (
@@ -105,7 +106,7 @@ export default function Table({ problems }) {
     columnHelper.accessor(
       (row) => (row.resourceLinks.slides.trim() !== "" ? true : false),
       {
-        header: () => "S",
+        header: () => "Slides",
         id: "slides",
         filterFn: booleanIntFilter,
         cell: (info) => (
@@ -118,7 +119,7 @@ export default function Table({ problems }) {
     columnHelper.accessor(
       (row) => (row.resourceLinks.video.trim() !== "" ? true : false),
       {
-        header: () => "V",
+        header: () => "Video",
         id: "video",
         filterFn: booleanIntFilter,
         cell: (info) => (
